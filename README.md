@@ -23,7 +23,7 @@
 
 ## About SAFU
 
-**SAFU AI Automation Agent** is a personal desktop AI assistant built to make everyday computer work faster and more practical. It combines real-time voice interaction, multilingual understanding, English voice replies, file and document management, desktop automation, web/research tools, and optional multi-model AI routing in one application.
+**SAFU AI Automation Agent** is a personal desktop AI assistant developed and maintained by **Abdul Basit Behlim** to make everyday computer work faster and more practical. It combines real-time voice interaction, multilingual understanding, English voice replies, file and document management, desktop automation, web/research tools, and optional multi-model AI routing in one application.
 
 SAFU can create and manage files, open applications, search local drives, execute multi-step workflows, create office documents, assist with coding and research, and delegate demanding tasks to cloud or local AI models.
 
@@ -224,20 +224,30 @@ python verify_safu.py --strict
 
 GitHub Actions verifies Python 3.11, 3.12, and 3.13, checks source compilation, runs the SAFU package preflight, and scans the repository for private runtime files and common credential patterns.
 
+## Author
+
+**SAFU AI Automation Agent** is developed and maintained by **Abdul Basit Behlim**.
+
+- GitHub: [abdulbasitbehlim](https://github.com/abdulbasitbehlim)
+- Repository: [SAFU-AI-Agent](https://github.com/abdulbasitbehlim/SAFU-AI-Agent)
+- SAFU-specific project design, branding, integrations, documentation, UI work, automation workflows, and modifications authored by Abdul Basit Behlim are copyright © 2026 Abdul Basit Behlim.
+
 ## Contributing
 
 Issues, bug reports, feature ideas, and pull requests are welcome. Please do not commit API keys, authentication tokens, browser sessions, personal memory databases, or other private runtime data.
 
 ## License & Attribution
 
-See [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE) for the applicable license and attribution requirements. Required upstream attribution is retained.
+Copyright © 2026 **Abdul Basit Behlim** for SAFU-specific original contributions and modifications.
+
+This repository also contains material subject to existing third-party license obligations. Those legal notices are retained in [`LICENSE`](LICENSE) and [`NOTICE`](NOTICE). They do not imply sponsorship or endorsement of SAFU.
 
 ---
 
 <div align="center">
 
 **SAFU AI Automation Agent v0.0.1**  
-Built and customized by **Abdul Basit Behlim**
+Developed and maintained by **Abdul Basit Behlim**
 
 [GitHub Repository](https://github.com/abdulbasitbehlim/SAFU-AI-Agent)
 
