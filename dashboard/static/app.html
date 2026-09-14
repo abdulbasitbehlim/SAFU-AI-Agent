@@ -1,0 +1,42 @@
+<!doctype html>
+<html lang="en">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>SAFU Dashboard</title>
+<style>
+:root{color-scheme:dark;--bg:#070b14;--panel:#0d1422;--panel2:#111a2c;--line:#22304a;--text:#e7edf7;--muted:#8fa0b8;--accent:#6c7cff;--good:#35d07f;--danger:#ff6b78}*{box-sizing:border-box}html,body{height:100%}body{margin:0;background:radial-gradient(circle at 50% -20%,#162342,#070b14 55%);font:14px/1.5 Inter,Segoe UI,Arial,sans-serif;color:var(--text);display:flex;flex-direction:column}header{height:64px;display:flex;align-items:center;gap:12px;padding:0 18px;border-bottom:1px solid var(--line);background:#080d17e8;backdrop-filter:blur(12px)}.brand{font-weight:900;letter-spacing:.18em;font-size:18px}.brand b{color:var(--accent)}.spacer{flex:1}.pill{border:1px solid var(--line);border-radius:999px;padding:5px 10px;color:var(--muted);font-size:11px}.pill.online{color:var(--good);border-color:#35d07f55;background:#35d07f12}main{flex:1;min-height:0;display:grid;grid-template-columns:minmax(0,1fr) 250px;gap:14px;padding:14px}.chat,.side{border:1px solid var(--line);border-radius:18px;background:rgba(13,20,34,.88);min-height:0}.chat{display:flex;flex-direction:column}.feed{flex:1;overflow:auto;padding:18px;display:flex;flex-direction:column;gap:10px}.msg{max-width:82%;padding:10px 13px;border-radius:14px;border:1px solid var(--line);white-space:pre-wrap;word-break:break-word}.assistant{align-self:flex-start;background:#6c7cff16;border-color:#6c7cff44}.user{align-self:flex-end;background:#ffffff09}.system{align-self:center;background:transparent;border:0;color:var(--muted);font-size:11px}.composer{display:flex;gap:8px;padding:12px;border-top:1px solid var(--line)}input[type=text]{flex:1;min-width:0;border:1px solid var(--line);background:#080d18;color:var(--text);border-radius:12px;padding:12px 13px;outline:none}input[type=text]:focus{border-color:var(--accent)}button,.filebtn{border:1px solid var(--line);background:#111a2c;color:var(--text);border-radius:11px;padding:10px 12px;font-weight:700;cursor:pointer}button.primary{border:0;background:linear-gradient(135deg,#5365ff,#7868ff)}button:hover,.filebtn:hover{filter:brightness(1.12)}.side{padding:14px;overflow:auto}.side h2{font-size:12px;text-transform:uppercase;letter-spacing:.15em;color:var(--muted);margin:4px 0 10px}.card{border:1px solid var(--line);background:#080d18;border-radius:13px;padding:12px;margin-bottom:10px}.card strong{display:block;margin-bottom:5px}.actions{display:grid;grid-template-columns:1fr 1fr;gap:8px}.actions button{font-size:12px}.filebtn{display:block;text-align:center;margin-top:8px}.filebtn input{display:none}.files{display:flex;flex-direction:column;gap:6px;margin-top:8px}.files a{color:#aab5ff;text-decoration:none;font-size:12px;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}.muted{color:var(--muted);font-size:11px}@media(max-width:780px){main{grid-template-columns:1fr}.side{display:none}.msg{max-width:92%}}
+</style>
+</head>
+<body>
+<header><div class="brand"><b>S</b>AFU</div><div class="pill" id="endpoint">__IP__:__PORT__</div><div class="spacer"></div><div class="pill" id="state">Connecting…</div></header>
+<main>
+<section class="chat">
+  <div id="feed" class="feed"><div class="msg system">SAFU remote dashboard ready.</div></div>
+  <div class="composer"><input id="text" type="text" placeholder="Ask SAFU or send a desktop command…" autocomplete="off"><button id="send" class="primary">Send</button></div>
+</section>
+<aside class="side">
+  <h2>Quick actions</h2>
+  <div class="actions"><button data-command="Open my Desktop folder">Desktop</button><button data-command="Show system status">System</button><button data-command="Open my Downloads folder">Downloads</button><button id="wake">Wake SAFU</button></div>
+  <h2 style="margin-top:18px">File sharing</h2>
+  <div class="card"><strong>Send a file to SAFU</strong><div class="muted">Files are stored in SAFU Uploads on the host computer.</div><label class="filebtn">Choose file<input id="file" type="file"></label></div>
+  <div class="card"><strong>Available uploads</strong><div id="files" class="files"><span class="muted">Loading…</span></div></div>
+  <h2>Security</h2><div class="card muted">This dashboard is intended for your trusted local network. Pair it using SAFU's one-time key or QR code.</div>
+</aside>
+</main>
+<script>
+const token=sessionStorage.getItem('safu_token'); if(!token){location.replace('/login');throw new Error('No SAFU session');}
+const headers={'Authorization':'Bearer '+token,'Content-Type':'application/json'};
+const feed=document.getElementById('feed'), text=document.getElementById('text'), state=document.getElementById('state');
+function add(kind,value){const d=document.createElement('div');d.className='msg '+kind;d.textContent=value;feed.appendChild(d);feed.scrollTop=feed.scrollHeight;}
+async function sendCommand(value){const cmd=(value||text.value).trim();if(!cmd)return;text.value='';add('user',cmd);try{const r=await fetch('/api/command',{method:'POST',headers,body:JSON.stringify({text:cmd})});if(!r.ok){if(r.status===401)return logout();throw new Error('Command failed');}}catch(e){add('system',e.message);}}
+document.getElementById('send').onclick=()=>sendCommand();text.addEventListener('keydown',e=>{if(e.key==='Enter')sendCommand();});document.querySelectorAll('[data-command]').forEach(b=>b.onclick=()=>sendCommand(b.dataset.command));
+document.getElementById('wake').onclick=async()=>{try{const r=await fetch('/api/wake',{method:'POST',headers});if(!r.ok&&r.status===401)logout();else add('system','Wake signal sent to SAFU.');}catch(e){add('system','Wake request failed.');}};
+function logout(){sessionStorage.removeItem('safu_token');sessionStorage.removeItem('safu_key');location.replace('/login');}
+function connectWS(){const proto=location.protocol==='https:'?'wss':'ws';const ws=new WebSocket(`${proto}://${location.host}/ws?token=${encodeURIComponent(token)}`);ws.onopen=()=>{state.textContent='Online';state.classList.add('online');};ws.onmessage=e=>{try{const d=JSON.parse(e.data);const value=d.text||d.message||d.name||JSON.stringify(d);add(d.type==='user'?'user':d.type==='sys'?'system':'assistant',value);if(d.type==='file_received')loadFiles();}catch(_){}};ws.onclose=()=>{state.textContent='Reconnecting…';state.classList.remove('online');setTimeout(connectWS,1800);};ws.onerror=()=>ws.close();}
+async function loadFiles(){const box=document.getElementById('files');try{const r=await fetch('/api/files',{headers:{Authorization:'Bearer '+token}});if(r.status===401)return logout();const d=await r.json();box.innerHTML='';if(!d.files||!d.files.length){box.innerHTML='<span class="muted">No shared files yet.</span>';return;}d.files.slice(0,12).forEach(f=>{const a=document.createElement('a');a.textContent=f.name;a.href=`/uploads/${encodeURIComponent(f.name)}?token=${encodeURIComponent(token)}`;a.download=f.name;box.appendChild(a);});}catch(_){box.innerHTML='<span class="muted">Could not load files.</span>';}}
+document.getElementById('file').onchange=async e=>{const f=e.target.files[0];if(!f)return;const form=new FormData();form.append('file',f);add('system','Uploading '+f.name+'…');try{const r=await fetch('/api/upload',{method:'POST',headers:{Authorization:'Bearer '+token},body:form});const d=await r.json();if(!r.ok)throw new Error(d.error||'Upload failed');add('system','Uploaded '+d.name);loadFiles();}catch(err){add('system',err.message);}finally{e.target.value='';}};
+connectWS();loadFiles();text.focus();
+</script>
+</body>
+</html>
