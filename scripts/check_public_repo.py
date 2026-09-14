@@ -12,9 +12,10 @@ FORBIDDEN = {
 }
 PLACEHOLDER_NAMES = {"r", "RE"}
 LEGACY_BRANDING = ("faith" + "makes", "fatih" + "makes", "jar" + "vis", "AR" + "VIS")
+_OLD_REPO = "SAFU-AI-Agent" + "-"
 STALE_REPO_REFERENCES = {
-    "https://github.com/abdulbasitbehlim/SAFU-AI-Agent-",
-    "git@github.com:abdulbasitbehlim/SAFU-AI-Agent-",
+    "https://github.com/abdulbasitbehlim/" + _OLD_REPO,
+    "git@github.com:abdulbasitbehlim/" + _OLD_REPO,
 }
 SECRET_PATTERNS = {
     "Google API key": re.compile(r"AIza[0-9A-Za-z_-]{30,}"),
