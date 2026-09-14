@@ -1,0 +1,54 @@
+# SAFU full runtime — standard features plus browser automation, camera/vision,
+# remote dashboard, richer media handling and optional Windows integrations.
+PyQt6
+sounddevice
+numpy
+google-genai>=2.23.0,<3
+
+# Web/search/browser
+requests
+beautifulsoup4
+ddgs
+playwright
+youtube-transcript-api
+
+# Desktop automation
+pyautogui
+pyperclip
+pygetwindow
+
+# Vision/media
+pillow
+opencv-python
+mss
+pydub
+
+# System/files/documents/data
+psutil
+send2trash
+python-docx
+pdfplumber
+pypdf
+python-pptx
+openpyxl
+pandas
+
+# Remote dashboard
+fastapi
+uvicorn[standard]
+cryptography
+python-multipart
+qrcode[pil]
+
+# Optional integrations/plugins
+google-api-python-client
+google-auth-oauthlib
+tinytuya
+
+# Windows-only
+comtypes;   sys_platform == "win32"
+pycaw;      sys_platform == "win32"
+win10toast; sys_platform == "win32"
+pywinauto;  sys_platform == "win32"
+pywin32;    sys_platform == "win32"
+wmi;        sys_platform == "win32"

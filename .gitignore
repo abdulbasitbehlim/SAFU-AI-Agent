@@ -1,0 +1,53 @@
+# SAFU — public repository safety rules
+
+# Secrets / local configuration
+config/api_keys.json
+config/certs/
+config/whatsapp_web/
+**/token*.json
+**/client_secret*.json
+*credentials*.json
+.env
+.env.*
+!.env.example
+
+# Personal assistant memory / private local data
+memory/long_term.json
+memory/*.db
+
+# Runtime output
+*.log
+logs/
+downloads/
+screenshots/
+*.tmp
+
+# Python caches/builds
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+build/
+dist/
+*.egg-info/
+.eggs/
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+
+# Virtual environments
+.venv/
+venv/
+env/
+ENV/
+
+# IDE / OS
+.vscode/
+.idea/
+*.swp
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# Local Docker/runtime volumes
+.ollama/

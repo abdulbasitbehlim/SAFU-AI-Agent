@@ -1,0 +1,31 @@
+# SAFU standard runtime — everyday features with low idle resource use.
+# Heavy browser/video/dashboard packages stay in requirements.txt (--full).
+PyQt6
+sounddevice
+numpy
+google-genai>=2.23.0,<3
+requests
+beautifulsoup4
+ddgs
+psutil
+send2trash
+pillow
+
+# Desktop/file automation (installed, but only used when called)
+pyautogui
+pyperclip
+pygetwindow
+mss
+
+# Windows helpers
+pywin32; sys_platform == "win32"
+wmi; sys_platform == "win32"
+
+# Documents/data
+python-docx
+pdfplumber
+pypdf
+python-pptx
+openpyxl
+pandas
+youtube-transcript-api

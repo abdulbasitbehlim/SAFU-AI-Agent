@@ -1,0 +1,18 @@
+services:
+  safu-check:
+    build: .
+    command: ["python", "verify_safu.py"]
+
+  # Optional local LLM backend. Start with:
+  #   docker compose up -d ollama
+  # Then pull a model on the host/container as documented by Ollama.
+  ollama:
+    image: ollama/ollama:latest
+    ports:
+      - "11434:11434"
+    volumes:
+      - ollama-data:/root/.ollama
+    profiles: ["local-llm"]
+
+volumes:
+  ollama-data:
