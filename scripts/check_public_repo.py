@@ -58,7 +58,8 @@ def main() -> int:
                 if stale in text:
                     problems.append(f"stale repository reference in {rel}: {stale}")
 
-        if rel not in {"LICENSE", "verify_safu.py", "scripts/check_public_repo.py"}:
+        is_legal_archive = rel == "LICENSE" or rel.startswith("THIRD_PARTY_LICENSES/")
+        if not is_legal_archive and rel not in {"verify_safu.py", "scripts/check_public_repo.py"}:
             low = text.lower()
             for legacy in LEGACY_BRANDING:
                 if legacy.lower() in low:
