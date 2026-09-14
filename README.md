@@ -2,7 +2,7 @@
 
 # SAFU AI Automation Agent
 
-**A Windows-first personal AI assistant for voice interaction, desktop automation, document creation, research, and multi-model AI workflows.**
+**A Windows personal AI assistant for voice interaction, desktop automation, document creation, research, and multi-model AI workflows.**
 
 [![CI](https://github.com/abdulbasitbehlim/SAFU-AI-Agent/actions/workflows/ci.yml/badge.svg)](https://github.com/abdulbasitbehlim/SAFU-AI-Agent/actions/workflows/ci.yml)
 [![Version](https://img.shields.io/badge/version-v0.0.1-5865F2)](./VERSION)
