@@ -1,0 +1,31 @@
+name: CI
+
+on:
+  push:
+  pull_request:
+
+permissions:
+  contents: read
+
+jobs:
+  verify:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ["3.11", "3.12", "3.13"]
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: ${{ matrix.python-version }}
+      - name: Compile source
+        run: python -m compileall -q .
+      - name: Public-package verification
+        run: python verify_safu.py
+      - name: Secret/private-file publication check
+        run: python scripts/check_public_repo.py
+      - name: Confirm private runtime files are absent
+        shell: bash
+        run: |
+          test ! -f config/api_keys.json
+          test ! -f memory/long_term.json
