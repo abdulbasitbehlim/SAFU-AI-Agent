@@ -9,5 +9,7 @@ documentation, UI work, configuration, and modifications authored by
 Abdul Basit Behlim are copyright (c) 2026 Abdul Basit Behlim.
 
 Third-party or upstream material, where present, retains its original copyright
-and license obligations. Those legal notices are preserved in LICENSE and are
-not endorsements of SAFU or its developer.
+and license obligations. The project-level license notice is in LICENSE, and
+preserved third-party legal text is stored under THIRD_PARTY_LICENSES/.
+Those third-party notices do not imply sponsorship or endorsement of SAFU or
+its developer.
