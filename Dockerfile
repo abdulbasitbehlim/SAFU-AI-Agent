@@ -6,9 +6,11 @@ ENV PYTHONDONTWRITEBYTECODE=1 \
 
 WORKDIR /app
 
+COPY requirements-ci.txt /app/requirements-ci.txt
+RUN python -m pip install --no-cache-dir -r requirements-ci.txt
+
 # Copy only repository files. Personal config/memory are excluded by .dockerignore.
 COPY . /app
 
-# The default image is intentionally lightweight. SAFU's package verifier works
-# without cloud credentials, a microphone, or a graphical desktop.
+# Docker is intentionally a headless verification/development target.
 CMD ["python", "verify_safu.py"]

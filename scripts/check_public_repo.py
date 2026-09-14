@@ -1,4 +1,4 @@
-"""Fail if private SAFU runtime data or common credential shapes are publishable."""
+"""Fail if private SAFU runtime data, accidental placeholders, or secrets are publishable."""
 from __future__ import annotations
 
 import re
@@ -9,6 +9,12 @@ ROOT = Path(__file__).resolve().parent.parent
 FORBIDDEN = {
     "config/api_keys.json",
     "memory/long_term.json",
+}
+PLACEHOLDER_NAMES = {"r", "RE"}
+LEGACY_BRANDING = ("faith" + "makes", "fatih" + "makes", "jar" + "vis", "AR" + "VIS")
+STALE_REPO_REFERENCES = {
+    "https://github.com/abdulbasitbehlim/SAFU-AI-Agent-",
+    "git@github.com:abdulbasitbehlim/SAFU-AI-Agent-",
 }
 SECRET_PATTERNS = {
     "Google API key": re.compile(r"AIza[0-9A-Za-z_-]{30,}"),
@@ -23,7 +29,7 @@ BINARY_SUFFIXES = {".png", ".ico", ".jpg", ".jpeg", ".webp", ".pyc", ".zip"}
 
 def tracked_files() -> list[str]:
     try:
-        out = subprocess.check_output(["git", "ls-files"], cwd=ROOT, text=True)
+        out = subprocess.check_output(["git", "ls-files"], cwd=ROOT, text=True, stderr=subprocess.DEVNULL)
         return [line.strip() for line in out.splitlines() if line.strip()]
     except Exception:
         return [str(p.relative_to(ROOT)).replace("\\", "/") for p in ROOT.rglob("*") if p.is_file()]
@@ -32,27 +38,44 @@ def tracked_files() -> list[str]:
 def main() -> int:
     files = tracked_files()
     problems: list[str] = []
+
     for rel in sorted(FORBIDDEN):
         if rel in files:
             problems.append(f"forbidden tracked file: {rel}")
 
     for rel in files:
         path = ROOT / rel
+        if path.name in PLACEHOLDER_NAMES and path.stat().st_size <= 2:
+            problems.append(f"accidental placeholder file: {rel}")
+
         if not path.is_file() or path.suffix.lower() in BINARY_SUFFIXES or "__pycache__" in path.parts:
             continue
+
         text = path.read_text(encoding="utf-8", errors="ignore")
+        if rel != "scripts/check_public_repo.py":
+            for stale in STALE_REPO_REFERENCES:
+                if stale in text:
+                    problems.append(f"stale repository reference in {rel}: {stale}")
+
+        if rel not in {"LICENSE", "verify_safu.py", "scripts/check_public_repo.py"}:
+            low = text.lower()
+            for legacy in LEGACY_BRANDING:
+                if legacy.lower() in low:
+                    problems.append(f"legacy branding in {rel}: {legacy}")
+
         for label, rx in SECRET_PATTERNS.items():
             if rx.search(text):
-                # The security/verifier source intentionally contains regex examples.
+                # These files intentionally contain credential-pattern examples.
                 if rel in {"SECURITY.md", "verify_safu.py", "scripts/check_public_repo.py"}:
                     continue
                 problems.append(f"{label} pattern in {rel}")
 
     if problems:
         print("PUBLIC REPO CHECK FAILED")
-        for p in problems:
-            print(" -", p)
+        for problem in problems:
+            print(" -", problem)
         return 1
+
     print(f"PUBLIC REPO CHECK PASSED ({len(files)} tracked/publishable files checked)")
     return 0
 
