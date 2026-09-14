@@ -1,5 +1,13 @@
-SAFU modifications and integration work: Abdul Basit Behlim.
+SAFU AI Automation Agent
+Copyright (c) 2026 Abdul Basit Behlim
 
-This project contains/derives from material distributed under the existing
-CC BY-NC 4.0 license included in LICENSE. Upstream attribution required by that
-license is retained there. This notice does not replace or override LICENSE.
+Project developer and maintainer: Abdul Basit Behlim
+GitHub: https://github.com/abdulbasitbehlim/SAFU-AI-Agent
+
+SAFU-specific project design, branding, integration work, automation workflows,
+documentation, UI work, configuration, and modifications authored by
+Abdul Basit Behlim are copyright (c) 2026 Abdul Basit Behlim.
+
+Third-party or upstream material, where present, retains its original copyright
+and license obligations. Those legal notices are preserved in LICENSE and are
+not endorsements of SAFU or its developer.
